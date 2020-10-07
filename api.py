@@ -1020,7 +1020,10 @@ class REST_API(get_baseview()):
 
             logging.info("Searching runs for dag_id: {}".format(dag_id))
             from airflow.api.common.experimental.get_dag_runs import get_dag_runs
-            runs = get_dag_runs(dag_id=dag_id)
+            if rbac_authentication_enabled == True:
+                runs = get_dag_runs(dag_id=dag_id)
+            else:
+                runs = get_dag_runs(dag_id=dag_id, run_url_route="airflow.graph")
 
             # Filter the runs based on start and end date.
             if start_date:
